@@ -1,5 +1,7 @@
 package com.example.vieony.mokapos.mvp.main.additem;
 
+import android.widget.CompoundButton;
+
 import com.example.vieony.mokapos.data.Discounts;
 import com.example.vieony.mokapos.model.CartItem;
 import com.example.vieony.mokapos.model.Discount;
@@ -69,6 +71,11 @@ public class AddItemFragmentPresenterImp implements AddItemFragmentContract.Pres
     @Override
     public void addItemToCart(CartItem cartItem) {
         view.onCartItemAdded(cartItem);
+    }
+
+    @Override
+    public Discount getDiscount() {
+        return discount;
     }
 
 

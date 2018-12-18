@@ -29,10 +29,13 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
     private Context context;
 
     @Inject
-    public ItemListAdapter(Context context, ClickListener clickListener) {
+    public ItemListAdapter(Context context) {
         this.context = context;
-        this.clickListener = clickListener;
         data = new ArrayList<>();
+    }
+
+    public void setClickListener(ClickListener clickListener) {
+        this.clickListener = clickListener;
     }
 
     @NonNull

@@ -36,7 +36,6 @@ public class MainActivityPresenterImpl implements MainActivityContract.Presenter
     @Override
     public void loadItemList() {
         apiInterface.getData().subscribeOn(Schedulers.io())
-                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Item>>() {
                     @Override

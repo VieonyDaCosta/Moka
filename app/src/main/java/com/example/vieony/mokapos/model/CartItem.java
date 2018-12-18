@@ -1,5 +1,8 @@
 package com.example.vieony.mokapos.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 public class CartItem {
     private Item item;
     private int quantity = 1;
@@ -17,11 +20,11 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public Item getItem(){
+    public Item getItem() {
         return item;
     }
 
-    public Discount getDiscount(){
+    public Discount getDiscount() {
         return discount;
     }
 
@@ -29,11 +32,25 @@ public class CartItem {
         return quantity;
     }
 
-    public double getPriceWithoutDiscount(){
+    public double getPriceWithoutDiscount() {
         return quantity * item.price();
     }
 
-    public String getFormattedPriceWithoutDiscount(){
+    public double getDiscountOnItem(){
+        return  getPriceWithoutDiscount() - getPriceWithDiscount();
+    }
+
+    public String getFormattedPriceWithoutDiscount() {
         return String.format("$%.0f", getPriceWithoutDiscount());
     }
+
+    public double getPriceWithDiscount() {
+
+        if (this.discount == null || this.discount.getPercentage() == 0) {
+            return getPriceWithoutDiscount();
+        }
+
+        return quantity * (item.price() - item.price() * discount.getPercentage() / 100);
+    }
 }
+

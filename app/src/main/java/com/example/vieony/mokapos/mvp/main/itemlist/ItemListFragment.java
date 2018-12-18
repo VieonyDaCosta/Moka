@@ -51,8 +51,9 @@ public class ItemListFragment extends Fragment implements ItemListContract.View{
         ButterKnife.bind(this, view);
 
         itemList.setLayoutManager(new LinearLayoutManager(context));
-        itemListAdapter = new ItemListAdapter(context, clickListener);
+        itemListAdapter = new ItemListAdapter(context);
         itemList.setAdapter(itemListAdapter);
+        itemListAdapter.setClickListener(clickListener);
         ItemListPresenterImpl presenter = new ItemListPresenterImpl(new DBHelper(context), this);
         presenter.loadItems();
         return view;

@@ -10,8 +10,6 @@ import android.widget.TextView;
 
 import com.example.vieony.mokapos.R;
 import com.example.vieony.mokapos.model.CartItem;
-import com.example.vieony.mokapos.model.Discount;
-import com.example.vieony.mokapos.mvp.main.discountlist.DiscountListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +38,8 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         CartItem cartItem = data.get(position);
         holder.title.setText(cartItem.getItem().getTitle());
-        holder.quantity.setText(cartItem.getQuantity());
+        holder.quantity.setText(String.format("x%d",cartItem.getQuantity()));
+        holder.price.setText(cartItem.getFormattedPriceWithoutDiscount());
     }
 
     @Override

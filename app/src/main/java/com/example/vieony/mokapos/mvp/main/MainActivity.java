@@ -16,6 +16,7 @@ import com.example.vieony.mokapos.model.CartItem;
 import com.example.vieony.mokapos.model.Item;
 import com.example.vieony.mokapos.mvp.main.additem.AddItemFragment;
 import com.example.vieony.mokapos.mvp.main.cart.CartFragment;
+import com.example.vieony.mokapos.mvp.main.cart.CartFragmentPresenterImpl;
 import com.example.vieony.mokapos.mvp.main.discountlist.DiscountListFragment;
 import com.example.vieony.mokapos.mvp.main.itemlist.ItemListAdapter;
 import com.example.vieony.mokapos.mvp.main.itemlist.ItemListFragment;
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
     private CartFragment cartFragment;
 
+    private ItemListFragment itemListFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,21 +60,33 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         if(savedInstanceState == null){
             presenter.loadLeftFragment(1);
             presenter.loadCartFragment();
+        }else {
+            ItemListFragment itemListFragment = (ItemListFragment) getSupportFragmentManager().
+                    findFragmentByTag(ItemListFragment.class.getName());
+            if(itemListFragment != null){
+                itemListFragment.setItemClickListener(this);
+            }
+            AddItemFragment addItemFragment = (AddItemFragment) getSupportFragmentManager().
+                    findFragmentByTag(AddItemFragment.class.getName());
+            if(addItemFragment != null){
+                addItemFragment.setCartItemListener(this);
+            }
+            cartFragment = (CartFragment) getSupportFragmentManager().
+                    findFragmentByTag(CartFragment.class.getName());
         }
-
     }
 
     private void addFragment(int container,Fragment fragment){
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(container, fragment)
+                .add(container, fragment, fragment.getClass().getName())
                 .commit();
     }
 
     private void replaceFragment(int container,Fragment fragment){
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(container, fragment)
+                .replace(container, fragment, fragment.getClass().getName())
                 .addToBackStack(fragment.getTag())
                 .commit();
     }
@@ -105,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
     @Override
     public void loadICartFragment(CartFragment fragment) {
+        cartFragment = fragment;
         addFragment(R.id.rightFrame, fragment);
     }
 
@@ -117,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
     @Override
     public void onCartItemAdded(CartItem cartItem) {
-
+        cartFragment.addCartItem(cartItem);
     }
+
 }

@@ -25,5 +25,6 @@ public interface AddItemFragmentContract {
         void clearPreviousDiscount();
         void setDiscount(int position);
         void addItemToCart(CartItem cartItem);
+        Discount getDiscount();
     }
 }

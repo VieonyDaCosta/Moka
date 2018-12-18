@@ -1,11 +1,15 @@
 package com.example.vieony.mokapos.mvp.main.additem;
 
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +27,10 @@ import com.example.vieony.mokapos.model.CartItem;
 import com.example.vieony.mokapos.model.Discount;
 import com.example.vieony.mokapos.model.Item;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -131,11 +137,20 @@ public class AddItemFragment extends DialogFragment implements AddItemFragmentCo
 
     private void initialiseDiscounts(){
         List<Discount> discountList = presenter.getDiscounts();
-        switchDiscount0.setText(discountList.get(0).getName());
+        DecimalFormat df = new DecimalFormat("#.##");
+        Discount discount0 = discountList.get(0);
+        switchDiscount0.setText(String.format("%s(%s%%)",discountList.get(0).getName(), df.format(discountList.get(0).getPercentage())));
         switchDiscount1.setText(discountList.get(1).getName());
         switchDiscount2.setText(discountList.get(2).getName());
         switchDiscount3.setText(discountList.get(3).getName());
         switchDiscount4.setText(discountList.get(4).getName());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+//        Dialog dialog = getDialog();
+//        Objects.requireNonNull(dialog.getWindow()).setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     @Override
@@ -161,6 +176,7 @@ public class AddItemFragment extends DialogFragment implements AddItemFragmentCo
 
             case R.id.btnSave:
                 cartItem.setQuantity(Utils.convertStringToInt(etQuantity.getText().toString()));
+                cartItem.setDiscount(presenter.getDiscount());
                 presenter.addItemToCart(cartItem);
                 dismiss();
                 break;
@@ -171,6 +187,7 @@ public class AddItemFragment extends DialogFragment implements AddItemFragmentCo
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if(isChecked){
             presenter.clearPreviousDiscount();
+            clearPreviousDiscount(buttonView);
             switch (buttonView.getId()){
                 case R.id.switchDiscount0:
                     presenter.setDiscount(0);
@@ -199,11 +216,27 @@ public class AddItemFragment extends DialogFragment implements AddItemFragmentCo
 
     @Override
     public void clearPreviousDiscount() {
-        switchDiscount0.setChecked(false);
-        switchDiscount1.setChecked(false);
-        switchDiscount2.setChecked(false);
-        switchDiscount3.setChecked(false);
-        switchDiscount4.setChecked(false);
+    }
+
+    public void clearPreviousDiscount(CompoundButton compoundButton) {
+        if(compoundButton == switchDiscount0){
+            setSwitchCheckedFalse(switchDiscount1, switchDiscount2, switchDiscount3, switchDiscount4);
+        } else if(compoundButton == switchDiscount1){
+            setSwitchCheckedFalse(switchDiscount0, switchDiscount2, switchDiscount3, switchDiscount4);
+        } else if(compoundButton == switchDiscount2){
+            setSwitchCheckedFalse(switchDiscount0, switchDiscount1, switchDiscount3, switchDiscount4);
+        } else if(compoundButton == switchDiscount3){
+            setSwitchCheckedFalse(switchDiscount0, switchDiscount1, switchDiscount2, switchDiscount4);
+        } else if(compoundButton == switchDiscount4){
+            setSwitchCheckedFalse(switchDiscount0, switchDiscount1, switchDiscount2, switchDiscount3);
+        }
+
+    }
+    private void setSwitchCheckedFalse(Switch switch1, Switch switch2, Switch switch3, Switch switch4){
+        switch1.setChecked(false);
+        switch2.setChecked(false);
+        switch3.setChecked(false);
+        switch4.setChecked(false);
     }
 
 
