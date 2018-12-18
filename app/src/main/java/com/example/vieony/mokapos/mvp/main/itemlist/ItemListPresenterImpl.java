@@ -18,7 +18,7 @@ public class ItemListPresenterImpl implements ItemListContract.Presenter {
     }
 
     @Override
-    public void loadList() {
-        view.showList(dbHelper.getAllItems());
+    public void loadItems() {
+        view.showItems(dbHelper.getAllItems());
     }
 }

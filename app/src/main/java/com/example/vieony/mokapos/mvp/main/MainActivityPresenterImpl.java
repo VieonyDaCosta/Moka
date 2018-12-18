@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.example.vieony.mokapos.data.DBHelper;
+import com.example.vieony.mokapos.mvp.main.cart.CartFragment;
+import com.example.vieony.mokapos.mvp.main.discountlist.DiscountListFragment;
 import com.example.vieony.mokapos.mvp.main.itemlist.ItemListFragment;
 import com.example.vieony.mokapos.mvp.main.library.LibraryFragment;
 import com.example.vieony.mokapos.retrofit.APIInterface;
@@ -34,6 +36,7 @@ public class MainActivityPresenterImpl implements MainActivityContract.Presenter
     @Override
     public void loadItemList() {
         apiInterface.getData().subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Item>>() {
                     @Override
@@ -47,8 +50,8 @@ public class MainActivityPresenterImpl implements MainActivityContract.Presenter
                     @Override
                     public void onNext(List<Item> data) {
                         try {
+                            System.out.println("processing item on thread"+Thread.currentThread());
                             dbHelper.insertItem(data);
-                            Log.d("",dbHelper.getAllItems().toString());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -67,7 +70,15 @@ public class MainActivityPresenterImpl implements MainActivityContract.Presenter
             case 2:
                 view.loadItemListFragment(ItemListFragment.newInstance());
                 break;
+            case 3:
+                view.loadDiscountListFragment(DiscountListFragment.newInstance());
+                break;
         }
 
+    }
+
+    @Override
+    public void loadCartFragment() {
+        view.loadICartFragment(CartFragment.newInstance());
     }
 }

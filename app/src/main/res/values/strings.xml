@@ -4,6 +4,17 @@
     <string name="all_discounts"> All Discounts</string>
     <string name="all_items">All Items</string>
 
+    <string name="discount">Discount</string>
+
+    <string name="save">Save</string>
+
+    <string name="discount_a">Discount A</string>
+    <string name="discount_b">Discount B</string>
+    <string name="discount_c">Discount C</string>
+    <string name="discount_d">Discount D</string>
+    <string name="discount_e">Discount E</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

@@ -1,6 +1,11 @@
 package com.example.vieony.mokapos.mvp.main.additem;
 
+import com.example.vieony.mokapos.data.Discounts;
+import com.example.vieony.mokapos.model.CartItem;
+import com.example.vieony.mokapos.model.Discount;
 import com.example.vieony.mokapos.model.Item;
+
+import java.util.ArrayList;
 
 public class AddItemFragmentPresenterImp implements AddItemFragmentContract.Presenter {
 
@@ -8,9 +13,13 @@ public class AddItemFragmentPresenterImp implements AddItemFragmentContract.Pres
 
     private int quantity;
     private Item item;
+    private Discount discount;
+    private ArrayList<Discount> discountList;
 
-    public AddItemFragmentPresenterImp(AddItemFragmentContract.View view){
+
+    public AddItemFragmentPresenterImp(Discounts discounts, AddItemFragmentContract.View view){
         this.view = view;
+        this.discountList = discounts.getDiscounts();
     }
 
     @Override
@@ -22,6 +31,7 @@ public class AddItemFragmentPresenterImp implements AddItemFragmentContract.Pres
     @Override
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+        view.showQuantity(quantity);
     }
 
     @Override
@@ -36,7 +46,29 @@ public class AddItemFragmentPresenterImp implements AddItemFragmentContract.Pres
 
     @Override
     public void displayQuantity() {
-        view.refreshQuantity(quantity);
+        view.showQuantity(quantity);
+    }
+
+    @Override
+    public ArrayList<Discount> getDiscounts() {
+        return discountList;
+    }
+
+
+    @Override
+    public void clearPreviousDiscount() {
+        discount = null;
+        view.clearPreviousDiscount();
+    }
+
+    @Override
+    public void setDiscount(int position) {
+        discount = discountList.get(position);
+    }
+
+    @Override
+    public void addItemToCart(CartItem cartItem) {
+        view.onCartItemAdded(cartItem);
     }
 
 

@@ -34,14 +34,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         // create item  table
-        db.execSQL("CREATE TABLE " + Item.TABLE_NAME + "("
-                + Item.COLUMN_ID + " INTEGER PRIMARY KEY,"
-                + Item.COLUMN_ALBUM_ID + " INTEGER,"
-                + Item.COLUMN_TITLE + " TEXT,"
-                + Item.COLUMN_URL + " TEXT,"
-                + Item.COLUMN_THUMBNAIL_URL + " TEXT, "
-                + " UNIQUE (" + Item.COLUMN_ID + ") ON CONFLICT REPLACE"
-                + ")");
+        db.execSQL(DbTableHelper.ITEM_TABLE_CREATE);
     }
 
     @Override
@@ -56,12 +49,12 @@ public class DBHelper extends SQLiteOpenHelper {
         db.beginTransaction();
         ContentValues values = new ContentValues();
         for (com.example.vieony.mokapos.retrofit.model.Item item : list) {
-            values.put(Item.COLUMN_ID, item.id);
-            values.put(Item.COLUMN_ALBUM_ID, item.albumId);
-            values.put(Item.COLUMN_TITLE, item.title);
-            values.put(Item.COLUMN_URL, item.url);
-            values.put(Item.COLUMN_THUMBNAIL_URL, item.thumbnailUrl);
-            db.insert(Item.TABLE_NAME, null, values);
+            values.put(DbTableHelper.ITEM_ID, item.id);
+            values.put(DbTableHelper.ITEM_ALBUM_ID, item.albumId);
+            values.put(DbTableHelper.ITEM_TITLE, item.title);
+            values.put(DbTableHelper.ITEM_URL, item.url);
+            values.put(DbTableHelper.ITEM_THUMBNAIL_URL, item.thumbnailUrl);
+            db.insertWithOnConflict(DbTableHelper.TABLE_ITEM, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -73,19 +66,25 @@ public class DBHelper extends SQLiteOpenHelper {
     public List<Item> getAllItems() {
         List<Item> photos = new ArrayList<>();
 
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.query(Item.TABLE_NAME, new String[]{Item.COLUMN_ID, Item.COLUMN_ALBUM_ID, Item.COLUMN_TITLE, Item.COLUMN_URL, Item.COLUMN_THUMBNAIL_URL},
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(
+                DbTableHelper.TABLE_ITEM,
+                new String[]{DbTableHelper.ITEM_ID,
+                        DbTableHelper.ITEM_ALBUM_ID,
+                        DbTableHelper.ITEM_TITLE,
+                        DbTableHelper.ITEM_URL,
+                        DbTableHelper.ITEM_THUMBNAIL_URL},
                 "", null, null, null, null);
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
                 Item photo = new Item(
-                        cursor.getInt(cursor.getColumnIndex(Item.COLUMN_ID)),
-                        cursor.getInt(cursor.getColumnIndex(Item.COLUMN_ALBUM_ID)),
-                        cursor.getString(cursor.getColumnIndex(Item.COLUMN_TITLE)),
-                        cursor.getString(cursor.getColumnIndex(Item.COLUMN_URL)),
-                        cursor.getString(cursor.getColumnIndex(Item.COLUMN_THUMBNAIL_URL)));
+                        cursor.getInt(cursor.getColumnIndex(DbTableHelper.ITEM_ID)),
+                        cursor.getInt(cursor.getColumnIndex(DbTableHelper.ITEM_ALBUM_ID)),
+                        cursor.getString(cursor.getColumnIndex(DbTableHelper.ITEM_TITLE)),
+                        cursor.getString(cursor.getColumnIndex(DbTableHelper.ITEM_URL)),
+                        cursor.getString(cursor.getColumnIndex(DbTableHelper.ITEM_THUMBNAIL_URL)));
 
                 photos.add(photo);
             } while (cursor.moveToNext());

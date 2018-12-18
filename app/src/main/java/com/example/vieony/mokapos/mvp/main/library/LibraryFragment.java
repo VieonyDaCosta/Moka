@@ -26,6 +26,7 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
 
     public interface LibraryFragmentCallback{
         void onItemListClicked();
+        void onDiscountListClicked();
     }
 
     public static LibraryFragment newInstance() {
@@ -58,6 +59,11 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()){
             case R.id.items:
                 callback.onItemListClicked();
+                break;
+
+            case R.id.discounts:
+                callback.onDiscountListClicked();
+                break;
         }
     }
 }

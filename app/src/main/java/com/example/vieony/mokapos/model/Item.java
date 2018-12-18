@@ -7,15 +7,6 @@ import java.util.Random;
 
 public class Item implements Serializable {
 
-    public static final String TABLE_NAME = "items";
-
-    public static final String COLUMN_ID = "id";
-    public static final String COLUMN_ALBUM_ID = "albumId";
-    public static final String COLUMN_TITLE = "title";
-    public static final String COLUMN_URL = "url";
-    public static final String COLUMN_THUMBNAIL_URL = "thumbnailUrl";
-
-
     private int id;
     private int albumId;
     private String title;

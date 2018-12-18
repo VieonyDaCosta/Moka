@@ -28,8 +28,8 @@ public class ItemListFragment extends Fragment implements ItemListContract.View{
     @BindView(R.id.itemList)
     RecyclerView itemList;
 
-    private RecyclerViewAdapter recyclerViewAdapter;
-    private RecyclerViewAdapter.ClickListener clickListener;
+    private ItemListAdapter itemListAdapter;
+    private ItemListAdapter.ClickListener clickListener;
 
     public static ItemListFragment newInstance() {
         Bundle args = new Bundle();
@@ -51,16 +51,16 @@ public class ItemListFragment extends Fragment implements ItemListContract.View{
         ButterKnife.bind(this, view);
 
         itemList.setLayoutManager(new LinearLayoutManager(context));
-        recyclerViewAdapter = new RecyclerViewAdapter(context, clickListener);
-        itemList.setAdapter(recyclerViewAdapter );
+        itemListAdapter = new ItemListAdapter(context, clickListener);
+        itemList.setAdapter(itemListAdapter);
         ItemListPresenterImpl presenter = new ItemListPresenterImpl(new DBHelper(context), this);
-        presenter.loadList();
+        presenter.loadItems();
         return view;
     }
 
     @Override
-    public void showList(List<Item> list) {
-        recyclerViewAdapter.setData(list);
+    public void showItems(List<Item> list) {
+        itemListAdapter.setData(list);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ItemListFragment extends Fragment implements ItemListContract.View{
         super.onAttach(context);
     }
 
-    public void setItemClickListener(RecyclerViewAdapter.ClickListener clickListener){
+    public void setItemClickListener(ItemListAdapter.ClickListener clickListener){
         this.clickListener = clickListener;
     }
 

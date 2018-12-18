@@ -7,10 +7,10 @@ import java.util.List;
 public interface ItemListContract {
 
     interface View {
-        void showList(List<Item> list);
+        void showItems(List<Item> list);
     }
 
     interface Presenter{
-        void loadList();
+        void loadItems();
     }
 }
