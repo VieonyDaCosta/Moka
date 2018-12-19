@@ -16,5 +16,7 @@ public interface CartFragmentContract {
         void addItemToCart(CartItem cartItem);
         void loadCartItems();
         ArrayList<CartItem> getCartItems();
+        void clearCart();
+        void editCartItem(CartItem cartItem);
     }
 }

@@ -3,7 +3,9 @@ package com.example.vieony.mokapos.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class CartItem {
+import java.io.Serializable;
+
+public class CartItem implements Serializable {
     private Item item;
     private int quantity = 1;
     private Discount discount;

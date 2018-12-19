@@ -54,7 +54,9 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
                 .thumbnail(0.5f)
                 .apply(new RequestOptions()
                         .centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .override(80, 80)
+                .placeholder(R.drawable.ic_photo_black_24dp))
                 .into(holder.thumbnail);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

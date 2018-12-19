@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.vieony.mokapos.R;
 import com.example.vieony.mokapos.model.CartItem;
+import com.example.vieony.mokapos.mvp.main.itemlist.ItemListAdapter;
 import com.example.vieony.mokapos.mvp.main.itemlist.ItemListFragment;
 
 import java.util.List;
@@ -25,7 +26,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CartFragment extends Fragment implements CartFragmentContract.View {
+public class CartFragment extends Fragment implements CartFragmentContract.View, View.OnClickListener {
 
     @BindView(R.id.cartList)
     RecyclerView cartListRecycler;
@@ -33,8 +34,8 @@ public class CartFragment extends Fragment implements CartFragmentContract.View 
     @BindView(R.id.btnClearCart)
     Button btnClearCart;
 
-    @BindView(R.id.tvCharge)
-    TextView tvCharge;
+    @BindView(R.id.btnCharge)
+    Button btnCharge;
 
     @BindView(R.id.tvSubtotal)
     TextView tvSubtotal;
@@ -42,12 +43,19 @@ public class CartFragment extends Fragment implements CartFragmentContract.View 
     @BindView(R.id.tvDiscount)
     TextView tvDiscount;
 
+    @BindView(R.id.viewNoItems)
+    View viewNoItems;
+
+    @BindView(R.id.viewCart)
+    View viewCart;
+
     private CartListAdapter cartListAdapter;
 
     private Context context;
 
     private CartFragmentPresenterImpl presenter;
 
+    private CartListAdapter.ClickListener clickListener;
 
     public static CartFragment newInstance() {
         Bundle args = new Bundle();
@@ -55,7 +63,6 @@ public class CartFragment extends Fragment implements CartFragmentContract.View 
         fragment.setArguments(args);
         return fragment;
     }
-
 
     public CartFragment() {
         // Required empty public constructor
@@ -70,28 +77,40 @@ public class CartFragment extends Fragment implements CartFragmentContract.View 
         ButterKnife.bind(this, view);
         cartListRecycler.setLayoutManager(new LinearLayoutManager(context));
         cartListAdapter = new CartListAdapter(context);
+        cartListAdapter.setClickListener(clickListener);
         cartListRecycler.setAdapter(cartListAdapter);
        presenter = new CartFragmentPresenterImpl(this);
        presenter.loadCartItems();
+       btnClearCart.setOnClickListener(this);
        setRetainInstance(true);
         return view;
     }
 
-    public void addCartItem(CartItem cartItem){
-        presenter.addItemToCart(cartItem);
+    public void addCartItem(CartItem cartItem, boolean isEdit){
+        if(isEdit) {
+            presenter.editCartItem(cartItem);
+        }else {
+            presenter.addItemToCart(cartItem);
+        }
     }
-
 
     @Override
     public void refreshCartItems(List<CartItem> cartItemList) {
         cartListAdapter.setData(cartItemList);
+        if(cartItemList.size() == 0){
+           viewCart.setVisibility(View.GONE);
+           viewNoItems.setVisibility(View.VISIBLE);
+        }else {
+            viewCart.setVisibility(View.VISIBLE);
+            viewNoItems.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void refreshCharges(String subTotal, String discount, String charge) {
         tvSubtotal.setText(subTotal);
         tvDiscount.setText(discount);
-        tvCharge.setText(charge);
+        btnCharge.setText(charge);
     }
 
     @Override
@@ -100,10 +119,22 @@ public class CartFragment extends Fragment implements CartFragmentContract.View 
         this.context = context;
     }
 
-
     public void setPresenter(CartFragmentPresenterImpl presenter){
         this.presenter = presenter;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btnClearCart:
+                presenter.clearCart();
+                break;
 
+        }
+    }
+
+
+    public void setItemClickListener(CartListAdapter.ClickListener clickListener){
+        this.clickListener = clickListener;
+    }
 }

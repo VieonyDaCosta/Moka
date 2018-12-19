@@ -7,7 +7,10 @@ import com.example.vieony.mokapos.model.CartItem;
 import com.example.vieony.mokapos.model.Discount;
 import com.example.vieony.mokapos.model.Item;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import utils.Utils;
 
 public class AddItemFragmentPresenterImp implements AddItemFragmentContract.Presenter {
 
@@ -17,6 +20,8 @@ public class AddItemFragmentPresenterImp implements AddItemFragmentContract.Pres
     private Item item;
     private Discount discount;
     private ArrayList<Discount> discountList;
+    DecimalFormat df = new DecimalFormat("#.##");
+    private boolean isEdit = false;
 
 
     public AddItemFragmentPresenterImp(Discounts discounts, AddItemFragmentContract.View view){
@@ -37,13 +42,27 @@ public class AddItemFragmentPresenterImp implements AddItemFragmentContract.Pres
     }
 
     @Override
+    public void setQuantity(String quantity) {
+        this.quantity = Utils.convertStringToInt(quantity);
+        view.showQuantity(this.quantity);
+    }
+
+    @Override
     public void incrementQuantity() {
+        if(quantity == 999){
+            return;
+        }
         quantity++;
+        view.showQuantity(quantity);
     }
 
     @Override
     public void decrementQuantity() {
+        if(quantity == 1){
+            return;
+        }
         quantity--;
+        view.showQuantity(quantity);
     }
 
     @Override
@@ -78,5 +97,31 @@ public class AddItemFragmentPresenterImp implements AddItemFragmentContract.Pres
         return discount;
     }
 
+    @Override
+    public String getDiscountText(int position) {
+        Discount discount = discountList.get(position);
+        return String.format("%s (%s%%)", discount.getName(), df.format(discount.getPercentage()));
+    }
 
+    @Override
+    public void setEditItem(boolean edit) {
+        isEdit = edit;
+    }
+
+    @Override
+    public boolean isEditItem() {
+        return isEdit;
+    }
+
+    @Override
+    public void setDiscount(Discount discount) {
+        this.discount = discount;
+        for(int i= 0; i <  discountList.size(); i++){
+            if(discount == discountList.get(i)){
+                view.showDiscount(i);
+                return;
+            }
+        }
+
+    }
 }

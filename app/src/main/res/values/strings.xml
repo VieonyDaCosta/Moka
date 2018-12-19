@@ -7,6 +7,10 @@
     <string name="discount">Discount</string>
 
     <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="shopping_cart">Shopping Cart</string>
+    <string name="no_items">No Items</string>
 
     <string name="discount_a">Discount A</string>
     <string name="discount_b">Discount B</string>

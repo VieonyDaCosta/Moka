@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
-    android:padding="@dimen/margin_16"
-    tools:context=".mvp.main.additem.AddItemFragment">w
+    android:minWidth="400dp"
+    android:padding="@dimen/margin_8"
+    tools:context=".mvp.main.additem.AddItemFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,12 +19,18 @@
             android:layout_height="wrap_content">
 
             <Button
+                android:id="@+id/btnCancel"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_chevron_left_black_24dp" />
+                android:drawableStart="@drawable/ic_chevron_left_black_24dp"
+                android:paddingLeft="0dp"
+                android:text="@string/cancel"
+                android:textAllCaps="false" />
 
             <TextView
                 android:id="@+id/tvTitle"
+                style="@style/TitleTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -31,35 +38,45 @@
 
             <Button
                 android:id="@+id/btnSave"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_chevron_right_black_24dp"
-                android:text="@string/save" />
+                android:paddingRight="0dp"
+                android:text="@string/save"
+                android:textAllCaps="false" />
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider" />
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_16"
+            android:layout_marginBottom="@dimen/margin_16">
 
             <ImageButton
-                android:id="@+id/btnIncrement"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:id="@+id/btnDecrement"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:background="@null"
                 android:src="@drawable/ic_decrement_24dp" />
 
             <EditText
                 android:id="@+id/etQuantity"
-                android:layout_width="0dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:inputType="number" />
 
             <ImageButton
-                android:id="@+id/btnDecrement"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:id="@+id/btnIncrement"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:background="@null"
                 android:src="@drawable/ic_increment_24dp" />
         </LinearLayout>
@@ -70,43 +87,55 @@
             android:layout_height="wrap_content"
             android:text="@string/discount" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_16"
+            android:orientation="vertical">
 
-            <Switch
-                android:id="@+id/switchDiscount0"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <Switch
-                android:id="@+id/switchDiscount1"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true" />
+                android:layout_marginBottom="@dimen/margin_16">
 
-            <Switch
-                android:id="@+id/switchDiscount2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/switchDiscount0" />
+                <Switch
+                    android:id="@+id/switchDiscount0"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
-            <Switch
-                android:id="@+id/switchDiscount3"
-                android:layout_width="wrap_content"
+                <Switch
+                    android:id="@+id/switchDiscount1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/switchDiscount1"
-                android:layout_alignParentEnd="true" />
+                android:layout_marginBottom="@dimen/margin_16">
+
+                <Switch
+                    android:id="@+id/switchDiscount2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Switch
+                    android:id="@+id/switchDiscount3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
 
             <Switch
                 android:id="@+id/switchDiscount4"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/switchDiscount3" />
+                android:layout_height="wrap_content" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </LinearLayout>
-
 
 </RelativeLayout>

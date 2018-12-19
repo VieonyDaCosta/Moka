@@ -3,13 +3,13 @@ package com.example.vieony.mokapos.mvp.main.additem;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +21,15 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.vieony.mokapos.R;
-import com.example.vieony.mokapos.Utils;
+
+import utils.InputFilterMinMax;
+import utils.Utils;
 import com.example.vieony.mokapos.data.Discounts;
 import com.example.vieony.mokapos.model.CartItem;
 import com.example.vieony.mokapos.model.Discount;
 import com.example.vieony.mokapos.model.Item;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,9 +39,9 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AddItemFragment extends DialogFragment implements AddItemFragmentContract.View,
-        View.OnClickListener, CompoundButton.OnCheckedChangeListener {
-
+public class AddItemFragment extends DialogFragment implements
+        AddItemFragmentContract.View, View.OnClickListener,
+        CompoundButton.OnCheckedChangeListener, TextWatcher {
 
     @BindView(R.id.tvTitle)
     TextView tvTitle;
@@ -72,8 +73,12 @@ public class AddItemFragment extends DialogFragment implements AddItemFragmentCo
     @BindView(R.id.btnSave)
     Button btnSave;
 
+    @BindView(R.id.btnCancel)
+    Button btnCancel;
+
 
     public static final String ITEM = "item";
+    public static final String CART_ITEM = "cart_item";
 
     private CartItem cartItem;
 
@@ -83,16 +88,25 @@ public class AddItemFragment extends DialogFragment implements AddItemFragmentCo
 
     private CartItemListener cartItemListener;
 
+    private boolean isEdit = false;
+
 
     public interface CartItemListener{
-        void onCartItemAdded(CartItem cartItem);
+        void onCartItemAdded(CartItem cartItem, boolean isEdit);
     }
-
 
     public static AddItemFragment newInstance(Item item) {
         AddItemFragment fragment = new AddItemFragment();
         Bundle args = new Bundle();
         args.putSerializable(ITEM, item);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static AddItemFragment newInstance(CartItem item) {
+        AddItemFragment fragment = new AddItemFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(CART_ITEM, item);
         fragment.setArguments(args);
         return fragment;
     }
@@ -111,6 +125,11 @@ public class AddItemFragment extends DialogFragment implements AddItemFragmentCo
             if (item != null) {
                 cartItem.setItem(item);
             }
+            CartItem cartItem = (CartItem) args.getSerializable(CART_ITEM);
+            if (cartItem != null) {
+                this.cartItem = cartItem;
+                isEdit = true;
+            }
         }
     }
 
@@ -128,39 +147,65 @@ public class AddItemFragment extends DialogFragment implements AddItemFragmentCo
         presenter = new AddItemFragmentPresenterImp(Discounts.getContext(context), this);
         presenter.setItem(cartItem.getItem());
         presenter.setQuantity(cartItem.getQuantity());
+        presenter.setDiscount(cartItem.getDiscount());
+        presenter.setEditItem(isEdit);
         btnIncrement.setOnClickListener(this);
         btnDecrement.setOnClickListener(this);
         initialiseDiscounts();
         btnSave.setOnClickListener(this);
+        etQuantity.setFilters(new InputFilter[]{ new InputFilterMinMax(1, 1000)});
+        etQuantity.addTextChangedListener(this);
+        btnCancel.setOnClickListener(this);
         return view;
     }
 
     private void initialiseDiscounts(){
-        List<Discount> discountList = presenter.getDiscounts();
-        DecimalFormat df = new DecimalFormat("#.##");
-        Discount discount0 = discountList.get(0);
-        switchDiscount0.setText(String.format("%s(%s%%)",discountList.get(0).getName(), df.format(discountList.get(0).getPercentage())));
-        switchDiscount1.setText(discountList.get(1).getName());
-        switchDiscount2.setText(discountList.get(2).getName());
-        switchDiscount3.setText(discountList.get(3).getName());
-        switchDiscount4.setText(discountList.get(4).getName());
+        switchDiscount0.setText(presenter.getDiscountText(0));
+        switchDiscount1.setText(presenter.getDiscountText(1));
+        switchDiscount2.setText(presenter.getDiscountText(2));
+        switchDiscount3.setText(presenter.getDiscountText(3));
+        switchDiscount4.setText(presenter.getDiscountText(4));
     }
+
 
     @Override
     public void onStart() {
         super.onStart();
-//        Dialog dialog = getDialog();
-//        Objects.requireNonNull(dialog.getWindow()).setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        Dialog dialog = getDialog();
+        Objects.requireNonNull(dialog.getWindow()).setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     @Override
     public void showItem(Item item) {
-        tvTitle.setText(item.getTitle());
+        tvTitle.setText(String.format("%s - %s",item.getTitle().substring(0, 5), item.getFormattedPrice()));
     }
 
     @Override
     public void showQuantity(int quantity) {
+        etQuantity.removeTextChangedListener(this);
         etQuantity.setText(String.format("%d", quantity));
+        etQuantity.addTextChangedListener(this);
+    }
+
+    @Override
+    public void showDiscount(int position) {
+        switch(position){
+            case 0 :
+                switchDiscount0.setChecked(true);
+                break;
+            case 1 :
+                switchDiscount1.setChecked(true);
+                break;
+            case 2 :
+                switchDiscount2.setChecked(true);
+                break;
+            case 3 :
+                switchDiscount3.setChecked(true);
+                break;
+            case 4 :
+                switchDiscount4.setChecked(true);
+                break;
+        }
     }
 
     @Override
@@ -178,6 +223,10 @@ public class AddItemFragment extends DialogFragment implements AddItemFragmentCo
                 cartItem.setQuantity(Utils.convertStringToInt(etQuantity.getText().toString()));
                 cartItem.setDiscount(presenter.getDiscount());
                 presenter.addItemToCart(cartItem);
+                dismiss();
+                break;
+
+            case R.id.btnCancel:
                 dismiss();
                 break;
         }
@@ -247,8 +296,23 @@ public class AddItemFragment extends DialogFragment implements AddItemFragmentCo
     @Override
     public void onCartItemAdded(CartItem cartItem) {
         if(cartItemListener != null){
-            cartItemListener.onCartItemAdded(cartItem);
+            cartItemListener.onCartItemAdded(cartItem, presenter.isEditItem());
         }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        presenter.setQuantity(s.toString());
     }
 
 

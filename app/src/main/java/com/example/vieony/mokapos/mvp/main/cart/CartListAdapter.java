@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.vieony.mokapos.R;
 import com.example.vieony.mokapos.model.CartItem;
+import com.example.vieony.mokapos.model.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,11 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.ViewHo
 
     private List<CartItem> data;
     private Context context;
+    private ClickListener clickListener;
+
+    public interface ClickListener {
+        void showEditItemDialog(CartItem item);
+    }
 
 
     public CartListAdapter(Context context) {
@@ -36,10 +42,16 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        CartItem cartItem = data.get(position);
+        final CartItem cartItem = data.get(position);
         holder.title.setText(cartItem.getItem().getTitle());
         holder.quantity.setText(String.format("x%d",cartItem.getQuantity()));
         holder.price.setText(cartItem.getFormattedPriceWithoutDiscount());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickListener.showEditItemDialog(cartItem);
+            }
+        });
     }
 
     @Override
@@ -67,5 +79,9 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.ViewHo
     public void setData(List<CartItem> data) {
         this.data = data;
         notifyDataSetChanged();
+    }
+
+    public void setClickListener(ClickListener clickListener) {
+        this.clickListener = clickListener;
     }
 }

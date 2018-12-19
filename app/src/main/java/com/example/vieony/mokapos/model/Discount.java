@@ -1,10 +1,13 @@
 package com.example.vieony.mokapos.model;
 
+import java.text.DecimalFormat;
+
 public class Discount {
 
     private int id;
     private String name;
     private double percentage;
+    private DecimalFormat df = new DecimalFormat("#.##");
 
     public Discount(int id, String name, double percentage){
         this.id = id;
@@ -21,6 +24,6 @@ public class Discount {
     }
 
     public String getFormattedPercentage() {
-        return  String.format("%.0f%%", percentage);
+        return  String.format("%s%%", df.format(percentage));
     }
 }

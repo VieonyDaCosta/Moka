@@ -13,4 +13,15 @@
         <item name="android:textColor">@color/titleTextColor</item>
     </style>
 
+    <style name="HeadingTextView">
+        <item name="android:textSize">@dimen/text_size_18</item>
+        <item name="android:textColor">@color/titleTextColor</item>
+    </style>
+
+    <style name="SubHeadingTextView">
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textColor">@color/titleTextColor</item>
+    </style>
+
+
 </resources>

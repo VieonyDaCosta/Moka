@@ -10,12 +10,14 @@
         android:id="@+id/leftFrame"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/margin_8"/>
 
     <FrameLayout
         android:id="@+id/rightFrame"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/margin_8"/>
 
 </LinearLayout>

@@ -17,6 +17,7 @@ import com.example.vieony.mokapos.model.Item;
 import com.example.vieony.mokapos.mvp.main.additem.AddItemFragment;
 import com.example.vieony.mokapos.mvp.main.cart.CartFragment;
 import com.example.vieony.mokapos.mvp.main.cart.CartFragmentPresenterImpl;
+import com.example.vieony.mokapos.mvp.main.cart.CartListAdapter;
 import com.example.vieony.mokapos.mvp.main.discountlist.DiscountListFragment;
 import com.example.vieony.mokapos.mvp.main.itemlist.ItemListAdapter;
 import com.example.vieony.mokapos.mvp.main.itemlist.ItemListFragment;
@@ -26,7 +27,7 @@ import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity implements MainActivityContract.View,
         LibraryFragment.LibraryFragmentCallback, ItemListAdapter.ClickListener,
-        AddItemFragment.CartItemListener{
+        AddItemFragment.CartItemListener, CartListAdapter.ClickListener {
 
     ActivityComponent mainActivityComponent;
 
@@ -61,6 +62,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
             presenter.loadLeftFragment(1);
             presenter.loadCartFragment();
         }else {
+
+            LibraryFragment libraryFragment = (LibraryFragment) getSupportFragmentManager().
+                    findFragmentByTag(LibraryFragment.class.getName());
+            if(libraryFragment != null){
+                libraryFragment.SetCallback(this);
+            }
+
             ItemListFragment itemListFragment = (ItemListFragment) getSupportFragmentManager().
                     findFragmentByTag(ItemListFragment.class.getName());
             if(itemListFragment != null){
@@ -73,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
             }
             cartFragment = (CartFragment) getSupportFragmentManager().
                     findFragmentByTag(CartFragment.class.getName());
+            cartFragment.setItemClickListener(this);
         }
     }
 
@@ -120,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
     @Override
     public void loadICartFragment(CartFragment fragment) {
+        fragment.setItemClickListener(this);
         cartFragment = fragment;
         addFragment(R.id.rightFrame, fragment);
     }
@@ -132,8 +142,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     }
 
     @Override
-    public void onCartItemAdded(CartItem cartItem) {
-        cartFragment.addCartItem(cartItem);
+    public void onCartItemAdded(CartItem cartItem, boolean isEdit) {
+        cartFragment.addCartItem(cartItem, isEdit);
     }
 
+    @Override
+    public void showEditItemDialog(CartItem item) {
+        AddItemFragment addItemFragment = AddItemFragment.newInstance(item);
+        addItemFragment.setCartItemListener(this);
+        addItemFragment.show(getSupportFragmentManager(), AddItemFragment.class.getName());
+    }
 }

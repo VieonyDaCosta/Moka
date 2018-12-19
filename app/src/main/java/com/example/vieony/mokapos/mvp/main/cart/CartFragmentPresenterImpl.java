@@ -36,6 +36,7 @@ public class CartFragmentPresenterImpl implements CartFragmentContract.Presenter
         this.cartItemsList = cartItemsList;
     }
 
+
     @Override
     public void loadCartItems() {
         view.refreshCartItems(cartItemsList);
@@ -44,6 +45,28 @@ public class CartFragmentPresenterImpl implements CartFragmentContract.Presenter
     @Override
     public ArrayList<CartItem> getCartItems() {
         return cartItemsList;
+    }
+
+    @Override
+    public void clearCart() {
+        cartItemsList.clear();
+        view.refreshCartItems(cartItemsList);
+        view.refreshCharges(getFormattedSubTotal(), getFormattedDiscount(), getFormattedCharge());
+
+    }
+
+    @Override
+    public void editCartItem(CartItem cartItem) {
+        for (CartItem cartItem1: cartItemsList){
+            if((cartItem.getItem() == cartItem1.getItem())){
+                cartItem1.setQuantity(cartItem.getQuantity());
+                cartItem1.setDiscount(cartItem.getDiscount());
+                break;
+            }
+        }
+
+        view.refreshCartItems(cartItemsList);
+        view.refreshCharges(getFormattedSubTotal(), getFormattedDiscount(), getFormattedCharge());
     }
 
     public String getFormattedSubTotal() {
@@ -81,7 +104,7 @@ public class CartFragmentPresenterImpl implements CartFragmentContract.Presenter
     }
 
     public String getFormattedCharge() {
-        return String.format("$%.0f", getCharge());
+        return String.format("Charge $%.0f", getCharge());
     }
 
     public double getCharge() {

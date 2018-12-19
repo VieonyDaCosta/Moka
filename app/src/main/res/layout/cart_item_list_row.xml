@@ -3,23 +3,26 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margin_8">
+    android:paddingTop="@dimen/margin_8"
+    android:paddingBottom="@dimen/margin_8">
 
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight="3"
         android:layout_height="wrap_content"
         style="@style/TitleTextView"
-        android:layout_marginStart="@dimen/margin_12"
-        android:layout_marginEnd="@dimen/margin_12"/>
+        android:layout_marginEnd="@dimen/margin_12"
+        android:maxLines="3"
+        android:ellipsize="end" />
 
     <TextView
         android:id="@+id/tvQuantity"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        style="@style/TitleTextView"/>
+        style="@style/TitleTextView"
+        android:textAlignment="viewEnd"/>
 
     <TextView
         android:id="@+id/tvPrice"
@@ -27,5 +30,6 @@
         android:layout_weight="1"
         android:layout_height="wrap_content"
         style="@style/TitleTextView"
-        android:layout_marginStart="@dimen/margin_12"/>
+        android:layout_marginStart="@dimen/margin_12"
+        android:textAlignment="viewEnd"/>
 </LinearLayout>

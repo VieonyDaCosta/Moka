@@ -11,6 +11,7 @@ public interface AddItemFragmentContract {
     interface View {
         void showItem(Item item);
         void showQuantity(int quantity);
+        void showDiscount(int position);
         void clearPreviousDiscount();
         void onCartItemAdded(CartItem cartItem);
     }
@@ -18,6 +19,7 @@ public interface AddItemFragmentContract {
     interface Presenter{
         void setItem(Item item);
         void setQuantity(int quantity);
+        void setQuantity(String quantity);
         void incrementQuantity();
         void decrementQuantity();
         void displayQuantity();
@@ -26,5 +28,9 @@ public interface AddItemFragmentContract {
         void setDiscount(int position);
         void addItemToCart(CartItem cartItem);
         Discount getDiscount();
+        String getDiscountText(int position);
+        void setEditItem(boolean edit);
+        boolean isEditItem();
+        void setDiscount(Discount discount);
     }
 }
