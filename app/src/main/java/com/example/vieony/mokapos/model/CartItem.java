@@ -52,7 +52,7 @@ public class CartItem implements Serializable {
             return getPriceWithoutDiscount();
         }
 
-        return quantity * (item.price() - item.price() * discount.getPercentage() / 100);
+        return quantity * (item.price() - (item.price() * discount.getPercentage() / 100));
     }
 }
 

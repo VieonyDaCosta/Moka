@@ -82,7 +82,7 @@ public class CartFragmentPresenterImpl implements CartFragmentContract.Presenter
         double subTotal = 0;
 
         for (CartItem cartItem : cartItemsList) {
-            subTotal += subTotal + cartItem.getPriceWithoutDiscount();
+            subTotal = subTotal + cartItem.getPriceWithoutDiscount();
         }
         return subTotal;
     }
@@ -98,7 +98,7 @@ public class CartFragmentPresenterImpl implements CartFragmentContract.Presenter
         double discount = 0;
 
         for (CartItem cartItem : cartItemsList) {
-            discount += discount + cartItem.getDiscountOnItem();
+            discount = discount + cartItem.getDiscountOnItem();
         }
         return discount;
     }
